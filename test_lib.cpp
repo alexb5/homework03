@@ -16,7 +16,7 @@ TEST(factorial_test, factorial)
 {
   EXPECT_EQ(lib::factorial(0), 1);
   EXPECT_EQ(lib::factorial(1), 1);
-  EXPECT_EQ(lib::factorial(2), 1);
+  EXPECT_EQ(lib::factorial(2), 2);
   EXPECT_EQ(lib::factorial(3), 6);
   EXPECT_EQ(lib::factorial(9), 362880);
 }
