@@ -20,3 +20,37 @@ TEST(factorial_test, factorial)
   EXPECT_EQ(lib::factorial(3), 6);
   EXPECT_EQ(lib::factorial(9), 362880);
 }
+
+TEST(allocator, allocate)
+{
+    lib::const_allocator<int,1> allocator;
+    int* p{nullptr};
+
+    EXPECT_NO_THROW(p = allocator.allocate(1));
+    EXPECT_NE(p, nullptr);
+    EXPECT_EQ(sizeof(allocator), sizeof(int) + sizeof(bool));
+}
+
+TEST(allocator, allocate_ten_items)
+{
+    lib::const_allocator<int,10> allocator;
+
+    EXPECT_EQ(sizeof(allocator), 10 * (sizeof(int) + sizeof(bool)));
+}
+
+TEST(allocator, allocate_map)
+{
+    lib::const_allocator<int,2> allocator;
+
+    using const_alocator_2 = lib::const_allocator<std::pair<const int, int>, 2>;
+
+    std::map<int, int, std::less<int>, const_alocator_2> map;
+
+    EXPECT_NO_THROW(map[0] = 1);
+    EXPECT_NO_THROW(map[1] = 2);
+
+    EXPECT_EQ(map[0], 1);
+    EXPECT_EQ(map[1], 2);
+
+    EXPECT_EQ(sizeof(allocator), 2 * (sizeof(std::pair<const int, int>) + sizeof(bool)));
+}
