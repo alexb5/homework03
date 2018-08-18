@@ -51,6 +51,4 @@ TEST(allocator, allocate_map)
 
     EXPECT_EQ(map[0], 1);
     EXPECT_EQ(map[1], 2);
-
-    EXPECT_EQ(sizeof(allocator), 2 * (sizeof(std::pair<const int, int>) + sizeof(bool)));
 }
