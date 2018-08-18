@@ -74,4 +74,41 @@ private:
     }
 };
 
+template<typename T, typename A = std::allocator<lib::custom_list::node>>
+class custom_list
+{
+    using value_type = T;
+    using allocator_type = A;
+
+    using pointer = T*;
+    using const_pointer = const T*;
+    using reference = T&;
+    using const_reference = const T&;
+
+    struct node {
+        pointer data;
+        node* next{nullptr};
+        node* previous{nullptr};
+    };
+
+    void push_back( const T& value ) {
+        auto p = m_allocator.allocate(1);
+
+        new(p, value);
+
+        if(m_back){
+            m_back->data = p;
+        }
+    }
+
+
+
+private:
+    node* m_front{nullptr};
+    node* m_back{nullptr};
+    size_t m_size{0};
+    allocator_type m_allocator;
+
+};
+
 } // namespace lib
