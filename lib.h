@@ -74,41 +74,127 @@ private:
     }
 };
 
-template<typename T, typename A = std::allocator<lib::custom_list::node>>
+template<typename T, typename A = std::allocator<T>>
 class custom_list
 {
     using value_type = T;
     using allocator_type = A;
 
     using pointer = T*;
-    using const_pointer = const T*;
     using reference = T&;
     using const_reference = const T&;
 
     struct node {
-        pointer data;
-        node* next{nullptr};
-        node* previous{nullptr};
+
+        node() = default;
+        explicit node(const_reference data) : m_data{data} {}
+
+        value_type m_data;
+        node* m_next{nullptr};
+        node* m_previous{nullptr};
     };
 
-    void push_back( const T& value ) {
-        auto p = m_allocator.allocate(1);
-
-        new(p, value);
-
-        if(m_back){
-            m_back->data = p;
+    struct iterator : std::iterator<std::bidirectional_iterator_tag, T> {
+        
+        explicit iterator(node* current) : m_current(current) {}
+        
+        iterator& operator++() {
+            if (m_current != nullptr) {
+                m_current = m_current->m_next;
+            }
+            
+            return *this;
         }
+
+        iterator& operator--() {
+            if (m_current != nullptr) {
+                m_current = m_current->m_previous;
+            }
+            
+            return *this;
+        }
+
+        reference operator*() {
+            return m_current->m_data;
+        }
+
+        bool operator==(iterator &other) {
+            return m_current == other.m_current;
+        }
+
+        bool operator!=(iterator &other) {
+            return !(*this == other);
+        }
+
+      private:
+        node* m_current;
+    };
+    custom_list() = default;
+
+    ~custom_list() {
+        auto p = m_front;
+        while(p != nullptr) {
+            auto next = p->m_next;
+            m_allocator.destroy(p);
+            m_allocator.deallocate(p);
+            p = next;
+        }
+        m_front = m_back = nullptr;
     }
 
+    void push_back(const_reference value) {
 
+        auto p = m_allocator.allocate(1);
+
+        m_allocator.construct(p, value);
+
+        if(m_back == nullptr) {
+            m_back = p;
+            m_front = p;
+        }
+        else {
+            m_back->m_next = p;
+            p->m_previous = m_back;
+            m_back = p;
+        }
+
+        m_size++;
+    }
+
+    void push_front(const_reference value) {
+
+        auto p = m_allocator.allocate(1);
+
+        m_allocator.construct(p, value);
+
+        if(m_front == nullptr) {
+            m_front = p;
+            m_back = p;
+        }
+        else {
+            m_back->m_previous = p;
+            p->m_next = m_front;
+            m_front = p;
+        }
+
+        m_size++;
+    }
+
+    iterator begin() {
+        return iterator(m_front);
+    }
+
+    iterator end() {
+        return iterator(nullptr);
+    }
 
 private:
     node* m_front{nullptr};
     node* m_back{nullptr};
     size_t m_size{0};
-    allocator_type m_allocator;
 
+    using alloc_t = typename allocator_type::template rebind<node>::other;
+    alloc_t m_allocator;
 };
 
 } // namespace lib

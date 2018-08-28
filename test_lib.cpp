@@ -52,3 +52,15 @@ TEST(allocator, allocate_map)
     EXPECT_EQ(map[0], 1);
     EXPECT_EQ(map[1], 2);
 }
+
+// TEST(allocator, size) {
+//     constexpr unsigned int n = 2;
+//     using type = test_class;
+//     auto radix = sizeof(void *);
+
+//     custom::allocator<type, n> allocator;
+
+//     auto data_size = ((sizeof(type) * n + radix - 1) / radix) * radix;
+//     auto bitset_size = sizeof(std::bitset<n>);
+//     EXPECT_EQ(sizeof(allocator), data_size + bitset_size);
+// }
