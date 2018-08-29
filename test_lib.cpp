@@ -7,18 +7,18 @@
 
 TEST(version_test_case, version_test)
 {
-  EXPECT_GT(lib::version_patch(), 0);
-  EXPECT_GT(lib::version_major(), 0);
-  EXPECT_GT(lib::version_minor(), 0);
+    EXPECT_GT(lib::version_patch(), 0);
+    EXPECT_GT(lib::version_major(), 0);
+    EXPECT_GT(lib::version_minor(), 0);
 }
 
 TEST(factorial_test, factorial)
 {
-  EXPECT_EQ(lib::factorial(0), 1);
-  EXPECT_EQ(lib::factorial(1), 1);
-  EXPECT_EQ(lib::factorial(2), 2);
-  EXPECT_EQ(lib::factorial(3), 6);
-  EXPECT_EQ(lib::factorial(9), 362880);
+    EXPECT_EQ(lib::factorial(0), 1);
+    EXPECT_EQ(lib::factorial(1), 1);
+    EXPECT_EQ(lib::factorial(2), 2);
+    EXPECT_EQ(lib::factorial(3), 6);
+    EXPECT_EQ(lib::factorial(9), 362880);
 }
 
 TEST(allocator, allocate)
@@ -62,34 +62,63 @@ TEST(container, push_back)
     list.push_back(2);
 
     EXPECT_EQ(list.size(), 2);
+}
+
+TEST(container, iterator)
+{
+    lib::custom_list<int> list{};
+
+    list.push_back(1);
+    list.push_back(2);
+
+    EXPECT_EQ(list.size(), 2);
 
     auto it = list.begin();
     EXPECT_EQ(*it, 1);
     ++it;
     EXPECT_EQ(*it, 2);
+    --it;
+    EXPECT_EQ(*it, 1);
+}
+
+
+
+TEST(container, range_for)
+{
+    lib::custom_list<int> list{};
+    std::stringstream ss;
+
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+
+    for(const auto& i : list)
+        ss<<i;
+
+    EXPECT_EQ(ss.str(), "123");
 }
 
 TEST(container, push_front)
 {
     lib::custom_list<int> list{};
+    std::stringstream ss;
 
     list.push_front(1);
-
     EXPECT_EQ(list.size(), 1);
 
     list.push_front(2);
-
     EXPECT_EQ(list.size(), 2);
 
-    auto it = list.begin();
-    EXPECT_EQ(*it, 2);
-    ++it;
-    EXPECT_EQ(*it, 1);
+
+    for(const auto& i : list)
+        ss<<i;
+
+    EXPECT_EQ(ss.str(), "21");
 }
 
 TEST(container_allocator, push)
 {
-    using const_alocator_2 = lib::const_allocator<lib::custom_list<int>, 2>;
+    using const_alocator_2 = lib::const_allocator<int, 2>;
 
     lib::custom_list<int, const_alocator_2> list;
 
