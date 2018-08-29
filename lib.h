@@ -77,6 +77,7 @@ private:
 template<typename T, typename A = std::allocator<T>>
 class custom_list
 {
+public:
     using value_type = T;
     using allocator_type = A;
 
@@ -93,7 +94,6 @@ class custom_list
         node* m_next{nullptr};
         node* m_previous{nullptr};
     };
-
     struct iterator : std::iterator<std::bidirectional_iterator_tag, T> {
         
         explicit iterator(node* current) : m_current(current) {}
@@ -136,7 +136,7 @@ class custom_list
         while(p != nullptr) {
             auto next = p->m_next;
             m_allocator.destroy(p);
-            m_allocator.deallocate(p);
+            m_allocator.deallocate(p, 1);
             p = next;
         }
         m_front = m_back = nullptr;
@@ -186,6 +186,11 @@ class custom_list
 
     iterator end() {
         return iterator(nullptr);
+    }
+
+    size_t size()
+    {
+        return m_size;
     }
 
 private:

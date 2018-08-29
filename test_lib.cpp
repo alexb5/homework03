@@ -40,8 +40,6 @@ TEST(allocator, allocate_ten_items)
 
 TEST(allocator, allocate_map)
 {
-    lib::const_allocator<int,2> allocator;
-
     using const_alocator_2 = lib::const_allocator<std::pair<const int, int>, 2>;
 
     std::map<int, int, std::less<int>, const_alocator_2> map;
@@ -53,14 +51,54 @@ TEST(allocator, allocate_map)
     EXPECT_EQ(map[1], 2);
 }
 
-// TEST(allocator, size) {
-//     constexpr unsigned int n = 2;
-//     using type = test_class;
-//     auto radix = sizeof(void *);
+TEST(container, push_back)
+{
+    lib::custom_list<int> list{};
 
-//     custom::allocator<type, n> allocator;
+    list.push_back(1);
 
-//     auto data_size = ((sizeof(type) * n + radix - 1) / radix) * radix;
-//     auto bitset_size = sizeof(std::bitset<n>);
-//     EXPECT_EQ(sizeof(allocator), data_size + bitset_size);
-// }
+    EXPECT_EQ(list.size(), 1);
+
+    list.push_back(2);
+
+    EXPECT_EQ(list.size(), 2);
+
+    auto it = list.begin();
+    EXPECT_EQ(*it, 1);
+    ++it;
+    EXPECT_EQ(*it, 2);
+}
+
+TEST(container, push_front)
+{
+    lib::custom_list<int> list{};
+
+    list.push_front(1);
+
+    EXPECT_EQ(list.size(), 1);
+
+    list.push_front(2);
+
+    EXPECT_EQ(list.size(), 2);
+
+    auto it = list.begin();
+    EXPECT_EQ(*it, 2);
+    ++it;
+    EXPECT_EQ(*it, 1);
+}
+
+TEST(container_allocator, push)
+{
+    using const_alocator_2 = lib::const_allocator<lib::custom_list<int>, 2>;
+
+    lib::custom_list<int, const_alocator_2> list;
+
+    EXPECT_NO_THROW(list.push_back(1));
+    EXPECT_NO_THROW(list.push_front(2));
+
+    auto it = list.begin();
+    EXPECT_EQ(*it, 2);
+
+    ++it;
+    EXPECT_EQ(*it, 1);
+}
