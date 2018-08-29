@@ -1,5 +1,3 @@
-include(GoogleTest)
-
 cmake_minimum_required(VERSION 3.2)
 
 project(allocator VERSION 1.1.$ENV{TRAVIS_BUILD_NUMBER})
@@ -47,11 +45,5 @@ include (CPack)
 
 enable_testing()
 
-# gtest_add_tests(test_${PROJECT_NAME} AUTO)
-
-if(POLICY CMP0057)
-        cmake_policy(SET CMP0057 NEW)
-endif()
-
-gtest_discover_tests(test_${PROJECT_NAME})
+add_test(test test_${PROJECT_NAME})
 
