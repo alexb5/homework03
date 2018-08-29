@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <map>
 #include <sstream>
 
 TEST(version_test_case, version_test)
