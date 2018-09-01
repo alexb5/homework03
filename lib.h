@@ -34,6 +34,8 @@ struct const_allocator {
     const_allocator() = default;
     ~const_allocator() = default;
 
+    const_allocator(const const_allocator&) : m_storage{} {}
+
     pointer allocate(std::size_t n) {
         auto p = find_free_block();
         if (!p)
@@ -43,7 +45,7 @@ struct const_allocator {
 
     void deallocate(pointer p, std::size_t n) {
         for(auto& block : m_storage) {
-            if(p == reinterpret_cast<pointer>(block.data) && !block.is_used ) {
+            if(p == reinterpret_cast<pointer>(block.data) && block.is_used ) {
                 block.is_used = false;
             }
         }
