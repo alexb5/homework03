@@ -35,6 +35,13 @@ struct const_allocator {
     ~const_allocator() = default;
 
     const_allocator(const const_allocator&) : m_storage{} {}
+    const_allocator(const const_allocator&&) : m_storage{} {}
+
+    bool operator!=(const const_allocator& other) {return true;}
+    bool operator==(const const_allocator& other) {return false;}
+
+    const_allocator& operator=(const const_allocator&) {}
+    const_allocator& operator=(const const_allocator&&) {}
 
     pointer allocate(std::size_t n) {
         auto p = find_free_block();

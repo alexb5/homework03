@@ -27,6 +27,8 @@ int main(int argc, char const *argv[])
         std::cout << i.first << " " << i.second;
     std::cout << std::endl;
 
+//    const_map factorialValues3 = factorialValues2;
+
     lib::custom_list<int> list1;
     for (int i = 0; i < 10; ++i)
         list1.push_back(i);

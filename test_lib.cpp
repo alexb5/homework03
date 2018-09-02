@@ -52,6 +52,66 @@ TEST(allocator, allocate_map)
     EXPECT_EQ(map[1], 2);
 }
 
+TEST(allocator, copy_map)
+{
+    using const_alocator_2 = lib::const_allocator<std::pair<const int, int>, 2>;
+
+    using const_map = std::map<int, int, std::less<int>, const_alocator_2>;
+
+    const_map map;
+
+    map[1] = 2;
+    map[0] = 1;
+
+    EXPECT_NO_THROW(const_map copy_map = map);
+}
+
+TEST(allocator, move_map)
+{
+    using const_alocator_2 = lib::const_allocator<std::pair<const int, int>, 2>;
+
+    using const_map = std::map<int, int, std::less<int>, const_alocator_2>;
+
+    const_map map;
+
+    map[1] = 2;
+    map[0] = 1;
+
+    EXPECT_NO_THROW(const_map copy_map = std::move(map));
+}
+
+TEST(allocator, copy_assignment_operator)
+{
+    using const_alocator_2 = lib::const_allocator<std::pair<const int, int>, 2>;
+
+    using const_map = std::map<int, int, std::less<int>, const_alocator_2>;
+
+    const_map map;
+
+    map[1] = 2;
+    map[0] = 1;
+
+    const_map copy_map;
+
+    EXPECT_NO_THROW(copy_map = map);
+}
+
+TEST(allocator, move_assignment_operator)
+{
+    using const_alocator_2 = lib::const_allocator<std::pair<const int, int>, 2>;
+
+    using const_map = std::map<int, int, std::less<int>, const_alocator_2>;
+
+    const_map map;
+
+    map[1] = 2;
+    map[0] = 1;
+
+    const_map copy_map;
+
+    EXPECT_NO_THROW(copy_map = std::move(map));
+}
+
 TEST(container, push_back)
 {
     lib::custom_list<int> list{};
