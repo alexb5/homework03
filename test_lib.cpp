@@ -64,6 +64,10 @@ TEST(allocator, copy_map)
     map[0] = 1;
 
     EXPECT_NO_THROW(const_map copy_map = map);
+
+    const_map copy_map2 = map;
+    EXPECT_EQ(copy_map2, map);
+
 }
 
 TEST(allocator, move_map)
@@ -77,7 +81,7 @@ TEST(allocator, move_map)
     map[1] = 2;
     map[0] = 1;
 
-    EXPECT_NO_THROW(const_map copy_map = std::move(map));
+    EXPECT_NO_THROW(const_map move_map = std::move(map));
 }
 
 TEST(allocator, copy_assignment_operator)
@@ -94,6 +98,7 @@ TEST(allocator, copy_assignment_operator)
     const_map copy_map;
 
     EXPECT_NO_THROW(copy_map = map);
+    EXPECT_EQ(copy_map, map);
 }
 
 TEST(allocator, move_assignment_operator)
@@ -107,9 +112,9 @@ TEST(allocator, move_assignment_operator)
     map[1] = 2;
     map[0] = 1;
 
-    const_map copy_map;
+    const_map move_map;
 
-    EXPECT_NO_THROW(copy_map = std::move(map));
+    EXPECT_NO_THROW(move_map = std::move(map));
 }
 
 TEST(container, push_back)
