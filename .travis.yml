@@ -1,0 +1,29 @@
+language: cpp
+compiler: gcc
+dist: trusty
+
+before_script:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libgtest-dev
+  - sudo apt-get install -qq g++-7
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
+
+  #build gtest
+  - cd /usr/src/gtest
+  - sudo env "PATH=$PATH" cmake CMakeLists.txt
+  - sudo make
+  - sudo cp *.a /usr/lib
+  - cd "${TRAVIS_BUILD_DIR}"
+
+script:
+  - cmake .
+  - cmake --build .
+  - ctest .
+  - cpack .
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+  - curl -T allocator-1.1.$TRAVIS_BUILD_NUMBER-Linux.deb -ualexb5:$BINTRAY_API_KEY "https://api.bintray.com/content/alexb5/hello_world/allocator/$TRAVIS_BUILD_NUMBER/allocator-1.1.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
